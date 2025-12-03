@@ -6,7 +6,7 @@ import java.util.List;
 public interface CityService {
     List<CityDto> getAll();
     CityDto getById(Long id);
-    void add(CityDto cityDto);
-    void update(Long id, CityDto cityDto);
-    void delete(Long id);
+    CityDto add(CityDto cityDto);
+    CityDto update(Long id, CityDto cityDto);
+    Boolean delete(Long id);
 }

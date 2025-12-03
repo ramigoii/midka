@@ -8,6 +8,7 @@ import com.example.midka.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,27 +23,33 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityDto getById(Long id) {
-        return  cityMapper.toDto(cityRepository.findById(id).orElseThrow());
+        return  cityMapper.toDto(cityRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void add(CityDto cityDto) {
-        cityRepository.save(cityMapper.toEntity(cityDto));
-
+    public CityDto add(CityDto cityDto) {
+        City city = cityRepository.save(cityMapper.toEntity(cityDto));
+        return cityMapper.toDto(city);
     }
 
     @Override
-    public void update(Long id, CityDto cityDto) {
-        City city = cityRepository.findById(id).orElseThrow();
+    public CityDto update(Long id, CityDto cityDto) {
+        City city = cityRepository.findById(id).orElse(null);
         City cityUp = cityMapper.toEntity(cityDto);
         city.setId(cityUp.getId());
         city.setName(cityUp.getName());
-        cityRepository.save(city);
+        City cityq = cityRepository.save(city);
+        return cityMapper.toDto(cityq);
 
     }
 
     @Override
-    public void delete(Long id) {
+    public Boolean delete(Long id) {
         cityRepository.deleteById(id);
+        City check = cityRepository.findById(id).orElse(null);
+        if(Objects.isNull(check)){
+            return true;
+        }
+        return false;
     }
 }
